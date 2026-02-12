@@ -1853,7 +1853,8 @@ ul, ol {
 }
 .recommend-blog-section .section-title h2 {
 	margin-top: 0;
-}
+
+
 /*---------------------
   Contact Section
 -----------------------*/
@@ -1950,6 +1951,10 @@ ul, ol {
 .map iframe {
 	width: 100%;
 }
+
+
+
+
 /*-------------------------------- Respinsive Media Styles --------------------------------*/
 
 @media only screen and (min-width: 1554px) and (max-width: 1920px) {

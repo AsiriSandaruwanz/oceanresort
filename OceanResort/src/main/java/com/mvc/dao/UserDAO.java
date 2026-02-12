@@ -3,6 +3,7 @@ package com.mvc.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import com.mvc.model.User;
 
@@ -12,6 +13,8 @@ public class UserDAO {
     private String jdbcUsername = "root";
     private String jdbcPassword = "";
 
+    
+    // REGISTER METHOD
     public boolean registerUser(User user) {
 
         boolean rowInserted = false;
@@ -39,5 +42,41 @@ public class UserDAO {
         }
 
         return rowInserted;
+    }
+    
+    
+    // LOGIN METHOD
+    public User login(String email, String password) {
+
+        User user = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+
+            String sql = "SELECT * FROM users WHERE email=? AND password=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, email);
+            pst.setString(2, password);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                user = new User(
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("password"),
+                        rs.getString("role")
+                );
+            }
+
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
     }
 }

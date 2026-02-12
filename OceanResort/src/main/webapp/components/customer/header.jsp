@@ -3,6 +3,7 @@
 
 <%
     String ctx = request.getContextPath();
+    com.mvc.model.User loggedUser = (com.mvc.model.User) session.getAttribute("loggedUser");
 %>
 
 <!DOCTYPE html>
@@ -92,7 +93,14 @@
                             <a href="#"><i class="fa fa-instagram"></i></a>
                         </div>
                         <!-- Changed Booking Now to Login -->
-                        <a href="<%=ctx%>/views/login.jsp" class="bk-btn">Login</a>
+                        <% if (loggedUser != null) { %>
+                            <!-- User is logged in, show name as link -->
+                            <a href="<%=ctx%>/views/customer/profile.jsp" class="bk-btn"> <%= loggedUser.getName() %></a>
+                        <% } else { %>
+                             <!-- User not logged in, show login button -->
+                            <a href="<%=ctx%>/views/login.jsp" class="bk-btn">Login</a>
+                        <% } %>
+                        
                         <div class="language-option">
                             <img src="<%=ctx%>/assets/customer/img/flag.jpg" alt="">
                             <span>EN</span>

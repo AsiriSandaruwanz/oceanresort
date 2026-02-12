@@ -20,7 +20,7 @@
                         <h2>Login</h2>
                     </div>
 
-                    <form action="<%=path%>/login" method="post" class="contact-form">
+                    <form action="<%=path%>/LoginServlet" method="post" class="contact-form">
 
                         <div class="form-group mb-3">
                             <label>Email Address</label>
