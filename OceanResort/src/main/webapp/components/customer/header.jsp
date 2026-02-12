@@ -55,7 +55,8 @@
             <img src="<%=ctx%>/assets/customer/img/flag.jpg" alt="">
             <span>EN <i class="fa fa-angle-down"></i></span>
         </div>
-        <a href="#" class="bk-btn">Booking Now</a>
+        <!-- Changed Booking Now to Login -->
+        <a href="<%=ctx%>/views/login.jsp" class="bk-btn">Login</a>
     </div>
 
     <nav class="mainmenu mobile-menu">
@@ -90,7 +91,8 @@
                             <a href="#"><i class="fa fa-twitter"></i></a>
                             <a href="#"><i class="fa fa-instagram"></i></a>
                         </div>
-                        <a href="#" class="bk-btn">Booking Now</a>
+                        <!-- Changed Booking Now to Login -->
+                        <a href="<%=ctx%>/views/login.jsp" class="bk-btn">Login</a>
                         <div class="language-option">
                             <img src="<%=ctx%>/assets/customer/img/flag.jpg" alt="">
                             <span>EN</span>
