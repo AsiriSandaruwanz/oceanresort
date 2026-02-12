@@ -43,10 +43,10 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userRole", user.getRole());
 
             if (user.getRole().equalsIgnoreCase("admin")) {
-                response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/views/admin/index.jsp");
 
             } else if (user.getRole().equalsIgnoreCase("staff")) {
-                response.sendRedirect(request.getContextPath() + "/views/staff/dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/views/staff/index.jsp");
 
             } else {
                 response.sendRedirect(request.getContextPath() + "/views/customer/index.jsp");
