@@ -43,19 +43,20 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userRole", user.getRole());
 
             if (user.getRole().equalsIgnoreCase("admin")) {
-                response.sendRedirect(request.getContextPath() + "/views/admin/index.jsp");
+                // Redirect to servlet, not JSP
+                response.sendRedirect(request.getContextPath() + "/dashboard");
 
             } else if (user.getRole().equalsIgnoreCase("staff")) {
-                response.sendRedirect(request.getContextPath() + "/views/staff/index.jsp");
-
+                response.sendRedirect(request.getContextPath() + "/staff"); // make staff servlet
             } else {
-                response.sendRedirect(request.getContextPath() + "/views/customer/index.jsp");
+                response.sendRedirect(request.getContextPath() + "/views/customer/index.jsp"); // make customer servlet
             }
 
         } else {
             request.setAttribute("error", "Invalid Email or Password!");
             request.getRequestDispatcher("/views/login.jsp").forward(request, response);
         }
+
 	}
 
 }
