@@ -62,13 +62,12 @@
 
     <nav class="mainmenu mobile-menu">
         <ul>
-            <li><a href="<%=request.getContextPath()%>/views/customer/index.jsp">Home</a></li>
-            <li><a href="<%=request.getContextPath()%>/views/customer/rooms.jsp">Rooms</a></li>
-            <li><a href="<%=request.getContextPath()%>/views/customer/about-us.jsp">About</a></li>
-            <li><a href="<%=request.getContextPath()%>/views/customer/blog.jsp">Blogs</a></li>
-            <li><a href="<%=request.getContextPath()%>/views/customer/contact.jsp">Contact</a></li>
-            <li><a href="<%=ctx%>/contact">Contact</a></li>
-        </ul>
+           <li><a href="<%=request.getContextPath()%>/home">Home</a></li>
+           <li><a href="<%=request.getContextPath()%>/rooms">Rooms</a></li>
+           <li><a href="<%=request.getContextPath()%>/about-us">About</a></li>
+           <li><a href="<%=request.getContextPath()%>/blog">Blogs</a></li> <!-- Call servlet -->
+           <li><a href="<%=request.getContextPath()%>/contact">Contact</a></li>
+       </ul>
     </nav>
 </div>
 
@@ -127,10 +126,10 @@
                     <div class="nav-menu">
                         <nav class="mainmenu">
                             <ul>
-                                <li><a href="<%=request.getContextPath()%>/views/customer/index.jsp">Home</a></li>
-                                <li><a href="<%=request.getContextPath()%>/views/customer/rooms.jsp">Rooms</a></li>
-                                <li><a href="<%=request.getContextPath()%>/views/customer/about-us.jsp">About</a></li>
-                                <li><a href="<%=request.getContextPath()%>/views/customer/blog.jsp">Blogs</a></li>
+                                <li><a href="<%=request.getContextPath()%>/home">Home</a></li>
+                                <li><a href="<%=request.getContextPath()%>/rooms">Rooms</a></li>
+                                <li><a href="<%=request.getContextPath()%>/about-us">About</a></li>
+                                <li><a href="<%=request.getContextPath()%>/blog">Blogs</a></li>
                                 <li><a href="<%=request.getContextPath()%>/views/customer/contact.jsp">Contact</a></li>
                             </ul>
                         </nav>

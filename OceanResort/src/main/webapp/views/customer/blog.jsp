@@ -1,7 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="com.mvc.model.Blog" %>
+
 <%
     String path = request.getContextPath();
+    List<Blog> blogs = (List<Blog>) request.getAttribute("blogList");
 %>
 
 <jsp:include page="/components/customer/header.jsp" />
@@ -29,96 +33,47 @@
     <div class="container">
         <div class="row">
 
+        <%
+            if (blogs != null && !blogs.isEmpty()) {
+                for (Blog b : blogs) {
+        %>
+
             <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-1.jpg">
+                <div class="blog-item set-bg"
+                     data-setbg="<%=path%>/<%= b.getImagePath() %>">
                     <div class="bi-text">
-                        <span class="b-tag">Travel Trip</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Tremblant In Canada</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 15th April, 2019</div>
+                        <span class="b-tag">
+                            <%= b.getCategoryName() != null ? b.getCategoryName() : "General" %>
+                        </span>
+
+                        <h4>
+                            <a href="<%=path%>/blog-details?id=<%= b.getId() %>">
+                                <%= b.getTitle() %>
+                            </a>
+                        </h4>
+
+                        <div class="b-time">
+                            <i class="icon_clock_alt"></i>
+                            <%= b.getBlogDate() %>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-2.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Camping</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Choosing A Static Caravan</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 15th April, 2019</div>
-                    </div>
-                </div>
+        <%
+                }
+            } else {
+        %>
+
+            <div class="col-lg-12 text-center">
+                <h4>No blogs available.</h4>
             </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-3.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Event</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Copper Canyon</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 21st April, 2019</div>
-                    </div>
-                </div>
-            </div>
+        <%
+            }
+        %>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-4.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Trivago</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">A Time Travel Postcard</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 22nd April, 2019</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-5.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Camping</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">A Time Travel Postcard</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 25th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-6.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Travel Trip</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Virginia Travel For Kids</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 28th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-7.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Travel Trip</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Bryce Canyon A Stunning</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 29th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-8.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Event & Travel</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Motorhome Or Trailer</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 30th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-9.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Camping</span>
-                        <h4><a href="<%=path%>/blog-details.jsp">Lost In Lagos Portugal</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 30th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- Load More Button -->
             <div class="col-lg-12">
                 <div class="load-more">
                     <a href="#" class="primary-btn">Load More</a>
