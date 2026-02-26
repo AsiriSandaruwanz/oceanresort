@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     import="java.util.List, com.mvc.model.Blog" %>
+
 <%
     String path = request.getContextPath();
 %>
@@ -303,55 +304,91 @@
 <section class="blog-section spad">
     <div class="container">
         <div class="row">
-            <!-- Blog Items -->
-            <div class="col-lg-4">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-1.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Travel Trip</span>
-                        <h4><a href="#">Tremblant In Canada</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 15th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-2.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Camping</span>
-                        <h4><a href="#">Choosing A Static Caravan</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 15th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="blog-item set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-3.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Event</span>
-                        <h4><a href="#">Copper Canyon</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 21th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-8">
-                <div class="blog-item small-size set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-wide.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Event</span>
-                        <h4><a href="#">Trip To Iqaluit In Nunavut A Canadian Arctic City</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 08th April, 2019</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="blog-item small-size set-bg" data-setbg="<%=path%>/assets/customer/img/blog/blog-10.jpg">
-                    <div class="bi-text">
-                        <span class="b-tag">Travel</span>
-                        <h4><a href="#">Traveling To Barcelona</a></h4>
-                        <div class="b-time"><i class="icon_clock_alt"></i> 12th April, 2019</div>
+
+<%
+    List<Blog> blogs = (List<Blog>) request.getAttribute("latestBlogs");
+
+    if (blogs != null && !blogs.isEmpty()) {
+        int index = 0;
+
+        for (Blog blog : blogs) {
+            index++;
+%>
+
+    <% if (index <= 3) { %>
+        <div class="col-lg-4">
+            <div class="blog-item set-bg"
+                 data-setbg="<%=path%>/<%=blog.getImagePath()%>">
+                <div class="bi-text">
+                    <span class="b-tag"><%=blog.getCategoryName()%></span>
+                    <h4>
+                        <a href="<%=path%>/blog-details?id=<%=blog.getId()%>">
+                            <%=blog.getTitle()%>
+                        </a>
+                    </h4>
+                    <div class="b-time">
+                        <i class="icon_clock_alt"></i>
+                        <%=blog.getBlogDate()%>
                     </div>
                 </div>
             </div>
         </div>
+    <% } %>
+
+    <% if (index == 4) { %>
+        <div class="col-lg-8">
+            <div class="blog-item small-size set-bg"
+                 data-setbg="<%=path%>/<%=blog.getImagePath()%>">
+                <div class="bi-text">
+                    <span class="b-tag"><%=blog.getCategoryName()%></span>
+                    <h4>
+                        <a href="<%=path%>/blog-details?id=<%=blog.getId()%>">
+                            <%=blog.getTitle()%>
+                        </a>
+                    </h4>
+                    <div class="b-time">
+                        <i class="icon_clock_alt"></i>
+                        <%=blog.getBlogDate()%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (index == 5) { %>
+        <div class="col-lg-4">
+            <div class="blog-item small-size set-bg"
+                 data-setbg="<%=path%>/<%=blog.getImagePath()%>">
+                <div class="bi-text">
+                    <span class="b-tag"><%=blog.getCategoryName()%></span>
+                    <h4>
+                        <a href="<%=path%>/blog-details?id=<%=blog.getId()%>">
+                            <%=blog.getTitle()%>
+                        </a>
+                    </h4>
+                    <div class="b-time">
+                        <i class="icon_clock_alt"></i>
+                        <%=blog.getBlogDate()%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+<%
+        }
+    } else {
+%>
+        <div class="col-lg-12">
+            <p>No blogs available.</p>
+        </div>
+<%
+    }
+%>
+
+        </div>
     </div>
 </section>
-<!-- Blog Section End --> 
+<!-- Blog Section End -->
 
 <jsp:include page="/components/customer/footer.jsp" />

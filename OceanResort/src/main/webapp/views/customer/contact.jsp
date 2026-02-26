@@ -41,20 +41,71 @@
 
             <!-- Contact Form -->
             <div class="col-lg-7 offset-lg-1">
-                <form action="<%=path%>/submit-contact" method="post" class="contact-form">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <input type="text" name="name" placeholder="Your Name" required>
+                <div class="contact-form-wrapper">
+
+                    <!-- Display success or error message -->
+                    <%
+                        String successMessage = (String) request.getAttribute("successMessage");
+                        String errorMessage = (String) request.getAttribute("errorMessage");
+
+                        if (successMessage != null) {
+                    %>
+                        <div style="padding:15px; margin-bottom:20px; color:#155724; background-color:#d4edda; border:1px solid #c3e6cb; border-radius:5px;">
+                            <%= successMessage %>
                         </div>
-                        <div class="col-lg-6">
-                            <input type="email" name="email" placeholder="Your Email" required>
+                    <%
+                        } else if (errorMessage != null) {
+                    %>
+                        <div style="padding:15px; margin-bottom:20px; color:#721c24; background-color:#f8d7da; border:1px solid #f5c6cb; border-radius:5px;">
+                            <%= errorMessage %>
                         </div>
-                        <div class="col-lg-12">
-                            <textarea name="message" placeholder="Your Message" required></textarea>
-                            <button type="submit" class="site-btn">Submit Now</button>
+                    <%
+                        }
+                    %>
+
+                    <form action="<%=path%>/contact" method="post" class="contact-form">
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="form-group">
+                                    <input type="text" name="name" class="form-control"
+                                           placeholder="Your Name" required
+                                           value="<%= request.getParameter("name") != null ? request.getParameter("name") : "" %>">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-4">
+                                <div class="form-group">
+                                    <input type="email" name="email" class="form-control"
+                                           placeholder="Your Email" required
+                                           value="<%= request.getParameter("email") != null ? request.getParameter("email") : "" %>">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-4">
+                                <div class="form-group">
+                                    <input type="text" name="subject" class="form-control"
+                                           placeholder="Subject" required
+                                           value="<%= request.getParameter("subject") != null ? request.getParameter("subject") : "" %>">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-4">
+                                <div class="form-group">
+                                    <textarea name="message" rows="6"
+                                              class="form-control"
+                                              placeholder="Your Message"
+                                              required><%= request.getParameter("message") != null ? request.getParameter("message") : "" %></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 text-right">
+                                <button type="submit" class="primary-btn contact-btn">
+                                    Send Message
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -69,3 +120,48 @@
 <!-- Contact Section End -->
 
 <jsp:include page="/components/customer/footer.jsp" />
+
+<!-- Optional CSS for contact form -->
+<style>
+.contact-form-wrapper {
+    background: #ffffff;
+    padding: 40px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-radius: 8px;
+}
+
+.contact-form .form-control {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    padding: 0 20px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.contact-form textarea.form-control {
+    height: auto;
+    padding: 15px 20px;
+    resize: none;
+}
+
+.contact-form .form-control:focus {
+    border-color: #dfa974;
+    box-shadow: none;
+}
+
+.contact-btn {
+    padding: 12px 35px;
+    border-radius: 30px;
+    font-weight: 600;
+    background-color: #dfa974;
+    color: #fff;
+    border: none;
+    transition: 0.3s;
+}
+
+.contact-btn:hover {
+    background-color: #c78b50;
+}
+</style>

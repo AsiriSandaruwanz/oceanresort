@@ -63,7 +63,7 @@
     <nav class="mainmenu mobile-menu">
         <ul>
            <li><a href="<%=request.getContextPath()%>/home">Home</a></li>
-           <li><a href="<%=request.getContextPath()%>/rooms">Rooms</a></li>
+           <li><a href="<%=request.getContextPath()%>/room">Rooms</a></li>
            <li><a href="<%=request.getContextPath()%>/about-us">About</a></li>
            <li><a href="<%=request.getContextPath()%>/blog">Blogs</a></li> <!-- Call servlet -->
            <li><a href="<%=request.getContextPath()%>/contact">Contact</a></li>
@@ -127,10 +127,10 @@
                         <nav class="mainmenu">
                             <ul>
                                 <li><a href="<%=request.getContextPath()%>/home">Home</a></li>
-                                <li><a href="<%=request.getContextPath()%>/rooms">Rooms</a></li>
+                                <li><a href="<%=request.getContextPath()%>/room">Rooms</a></li>
                                 <li><a href="<%=request.getContextPath()%>/about-us">About</a></li>
                                 <li><a href="<%=request.getContextPath()%>/blog">Blogs</a></li>
-                                <li><a href="<%=request.getContextPath()%>/views/customer/contact.jsp">Contact</a></li>
+                                <li><a href="<%=request.getContextPath()%>/contact">Contact</a></li>
                             </ul>
                         </nav>
                         <div class="nav-right search-switch">
