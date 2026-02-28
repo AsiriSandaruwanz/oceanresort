@@ -64,7 +64,7 @@
         <ul>
            <li><a href="<%=request.getContextPath()%>/home">Home</a></li>
            <li><a href="<%=request.getContextPath()%>/room">Rooms</a></li>
-           <li><a href="<%=request.getContextPath()%>/about-us">About</a></li>
+           <li><a href="<%=request.getContextPath()%>/about">About</a></li>
            <li><a href="<%=request.getContextPath()%>/blog">Blogs</a></li> <!-- Call servlet -->
            <li><a href="<%=request.getContextPath()%>/contact">Contact</a></li>
        </ul>
@@ -128,7 +128,7 @@
                             <ul>
                                 <li><a href="<%=request.getContextPath()%>/home">Home</a></li>
                                 <li><a href="<%=request.getContextPath()%>/room">Rooms</a></li>
-                                <li><a href="<%=request.getContextPath()%>/about-us">About</a></li>
+                                <li><a href="<%=request.getContextPath()%>/about">About</a></li>
                                 <li><a href="<%=request.getContextPath()%>/blog">Blogs</a></li>
                                 <li><a href="<%=request.getContextPath()%>/contact">Contact</a></li>
                             </ul>
