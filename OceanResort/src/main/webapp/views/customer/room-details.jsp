@@ -1,3 +1,10 @@
+<%@ page import="com.mvc.model.Room" %>
+
+<%
+    String path = request.getContextPath();
+    Room room = (Room) request.getAttribute("room");
+%>
+
 <jsp:include page="/components/customer/header.jsp" />
 
 <!-- Breadcrumb Section Begin -->
@@ -8,7 +15,7 @@
                 <div class="breadcrumb-text">
                     <h2>Our Rooms</h2>
                     <div class="bt-option">
-                        <a href="<%=request.getContextPath()%>/views/customer/index.jsp">Home</a>
+                        <a href="<%=path%>/views/customer/index.jsp">Home</a>
                         <span>Rooms</span>
                     </div>
                 </div>
@@ -18,17 +25,25 @@
 </div>
 <!-- Breadcrumb Section End -->
 
+<% if (room != null) { %>
+
 <!-- Room Details Section Begin -->
 <section class="room-details-section spad">
     <div class="container">
         <div class="row">
+
             <!-- Room Main Info -->
             <div class="col-lg-8">
                 <div class="room-details-item">
-                    <img src="<%=request.getContextPath()%>/assets/customer/img/room/room-details.jpg" alt="Premium King Room">
+
+                    <!-- ✅ Dynamic Image (SIZE PRESERVED) -->
+                    <img src="<%=path%>/<%=room.getImagePath()%>" 
+                         alt="<%=room.getTitle()%>"
+                         style="width:100%; height:500px; object-fit:cover;">
+
                     <div class="rd-text">
                         <div class="rd-title">
-                            <h3>Premium King Room</h3>
+                            <h3><%=room.getTitle()%></h3>
                             <div class="rdt-right">
                                 <div class="rating">
                                     <i class="icon_star"></i>
@@ -40,72 +55,46 @@
                                 <a href="#">Booking Now</a>
                             </div>
                         </div>
-                        <h2>159$<span>/Pernight</span></h2>
+
+                        <h2>$<%=room.getPricePerNight()%><span>/Pernight</span></h2>
+
                         <table>
                             <tbody>
                                 <tr>
                                     <td class="r-o">Size:</td>
-                                    <td>30 ft</td>
+                                    <td><%=room.getSize()%></td>
                                 </tr>
                                 <tr>
                                     <td class="r-o">Capacity:</td>
-                                    <td>Max person 5</td>
+                                    <td>Max person <%=room.getCapacity()%></td>
                                 </tr>
                                 <tr>
                                     <td class="r-o">Bed:</td>
-                                    <td>King Beds</td>
+                                    <td><%=room.getBedType()%></td>
                                 </tr>
                                 <tr>
                                     <td class="r-o">Services:</td>
-                                    <td>Wifi, Television, Bathroom,...</td>
+                                    <td><%=room.getAmenities()%></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p class="f-para">Motorhome or Trailer that is the question for you...</p>
-                        <p>The two commonly known recreational vehicle classes are the motorized and towable...</p>
+
+                        <p class="f-para">
+                            Enjoy a comfortable and luxurious stay in our <%=room.getTitle()%>.
+                        </p>
+                        <p>
+                            Designed for comfort and relaxation with premium facilities.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Reviews -->
+                <!-- Reviews (Design Unchanged) -->
                 <div class="rd-reviews">
                     <h4>Reviews</h4>
-                    <div class="review-item">
-                        <div class="ri-pic">
-                            <img src="<%=request.getContextPath()%>/assets/customer/img/room/avatar/avatar-1.jpg" alt="Avatar 1">
-                        </div>
-                        <div class="ri-text">
-                            <span>27 Aug 2019</span>
-                            <div class="rating">
-                                <i class="icon_star"></i>
-                                <i class="icon_star"></i>
-                                <i class="icon_star"></i>
-                                <i class="icon_star"></i>
-                                <i class="icon_star-half_alt"></i>
-                            </div>
-                            <h5>Brandon Kelley</h5>
-                            <p>Neque porro qui squam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
-                        </div>
-                    </div>
-                    <div class="review-item">
-                        <div class="ri-pic">
-                            <img src="<%=request.getContextPath()%>/assets/customer/img/room/avatar/avatar-2.jpg" alt="Avatar 2">
-                        </div>
-                        <div class="ri-text">
-                            <span>27 Aug 2019</span>
-                            <div class="rating">
-                                <i class="icon_star"></i>
-                                <i class="icon_star"></i>
-                                <i class="icon_star"></i>
-                                <i class="icon_star"></i>
-                                <i class="icon_star-half_alt"></i>
-                            </div>
-                            <h5>Brandon Kelley</h5>
-                            <p>Neque porro qui squam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
-                        </div>
-                    </div>
+                    <p>No reviews yet.</p>
                 </div>
 
-                <!-- Add Review Form -->
+                <!-- Add Review Form (Design Unchanged) -->
                 <div class="review-add">
                     <h4>Add Review</h4>
                     <form action="#" class="ra-form">
@@ -118,7 +107,7 @@
                             </div>
                             <div class="col-lg-12">
                                 <div>
-                                    <h5>You Rating:</h5>
+                                    <h5>Your Rating:</h5>
                                     <div class="rating">
                                         <i class="icon_star"></i>
                                         <i class="icon_star"></i>
@@ -141,34 +130,46 @@
                     <h3>Your Reservation</h3>
                     <form action="#">
                         <div class="check-date">
-                            <label for="date-in">Check In:</label>
-                            <input type="text" class="date-input" id="date-in">
+                            <label>Check In:</label>
+                            <input type="text" class="date-input">
                             <i class="icon_calendar"></i>
                         </div>
                         <div class="check-date">
-                            <label for="date-out">Check Out:</label>
-                            <input type="text" class="date-input" id="date-out">
+                            <label>Check Out:</label>
+                            <input type="text" class="date-input">
                             <i class="icon_calendar"></i>
                         </div>
+
                         <div class="select-option">
-                            <label for="guest">Guests:</label>
-                            <select id="guest">
-                                <option value="">3 Adults</option>
+                            <label>Guests:</label>
+                            <select>
+                                <option>Max <%=room.getCapacity()%> Persons</option>
                             </select>
                         </div>
+
                         <div class="select-option">
-                            <label for="room">Room:</label>
-                            <select id="room">
-                                <option value="">1 Room</option>
+                            <label>Room:</label>
+                            <select>
+                                <option><%=room.getTitle()%></option>
                             </select>
                         </div>
+
                         <button type="submit">Check Availability</button>
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
 <!-- Room Details Section End -->
+
+<% } else { %>
+
+<div class="container text-center">
+    <h3>Room not found.</h3>
+</div>
+
+<% } %>
 
 <jsp:include page="/components/customer/footer.jsp" />
