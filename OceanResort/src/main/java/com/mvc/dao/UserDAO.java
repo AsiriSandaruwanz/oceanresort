@@ -176,4 +176,28 @@ public class UserDAO {
 
         return rowDeleted;
     }
+    
+    // ---------------- UPDATE USER PROFILE (ONLY NAME, EMAIL, PHONE) ----------------
+    public boolean updateUserProfile(User user) {
+        boolean rowUpdated = false;
+        String sql = "UPDATE users SET name=?, email=?, phone=? WHERE user_id=?";
+
+        try (Connection con = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement pst = con.prepareStatement(sql)) {
+
+            pst.setString(1, user.getName());
+            pst.setString(2, user.getEmail());
+            pst.setString(3, user.getPhone());
+            pst.setInt(4, user.getUserId());
+
+            rowUpdated = pst.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rowUpdated;
+    }
+    
+    
 }

@@ -93,11 +93,11 @@
                         </div>
                         <!-- Changed Booking Now to Login -->
                         <% if (loggedUser != null) { %>
-                            <!-- User is logged in, show name as link -->
-                            <a href="<%=ctx%>/views/customer/profile.jsp" class="bk-btn"> <%= loggedUser.getName() %></a>
+                            <!-- User is logged in, link to the ProfileServlet -->
+                            <a href="<%= ctx %>/profile" class="bk-btn"> <%= loggedUser.getName() %></a>
                         <% } else { %>
-                             <!-- User not logged in, show login button -->
-                            <a href="<%=ctx%>/views/login.jsp" class="bk-btn">Login</a>
+                            <!-- User not logged in, show login button -->
+                            <a href="<%= ctx %>/views/login.jsp" class="bk-btn">Login</a>
                         <% } %>
                         
                         <div class="language-option">

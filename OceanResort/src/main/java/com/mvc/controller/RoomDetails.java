@@ -1,32 +1,27 @@
 package com.mvc.controller;
 
+import com.mvc.dao.FeedbackDAO;
 import com.mvc.dao.RoomDAO;
+import com.mvc.model.Feedback;
 import com.mvc.model.Room;
+import com.mvc.model.User;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-/**
- * Servlet implementation class RoomDetailsServlet
- * Displays detailed information about a single room for customers
- */
 @WebServlet("/room-details")
 public class RoomDetails extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private RoomDAO roomDAO = new RoomDAO();
+    private FeedbackDAO feedbackDAO = new FeedbackDAO();
 
-    /**
-     * Handles GET requests to show room details
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("RoomDetailsServlet: doGet called"); // debug
-
-        // 1️⃣ Get roomId from request parameter
         String roomIdParam = request.getParameter("roomId");
         Room room = null;
 
@@ -34,34 +29,66 @@ public class RoomDetails extends HttpServlet {
             try {
                 int roomId = Integer.parseInt(roomIdParam);
 
-                // 2️⃣ Fetch room details from database
+                // Fetch room details
                 room = roomDAO.getRoomById(roomId);
+
+                if (room != null) {
+                    // ✅ Fetch all feedbacks for this room
+                    List<Feedback> feedbackList = feedbackDAO.getFeedbackByRoomId(roomId);
+                    request.setAttribute("feedbackList", feedbackList);
+                }
 
             } catch (NumberFormatException e) {
                 System.err.println("Invalid roomId: " + roomIdParam);
             }
         }
 
-        // 3️⃣ Handle missing or invalid room
         if (room == null) {
-            // Redirect back to the rooms list if room not found
             response.sendRedirect(request.getContextPath() + "/room");
             return;
         }
 
-        // 4️⃣ Set room object in request for JSP access
         request.setAttribute("room", room);
-
-        // 5️⃣ Forward to the room-details JSP
         request.getRequestDispatcher("/views/customer/room-details.jsp")
                .forward(request, response);
     }
 
-    /**
-     * Handles POST requests (simply forwards to doGet)
-     */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedUser") == null) {
+            // No user logged in, redirect to login page
+            response.sendRedirect(request.getContextPath() + "/views/login.jsp");
+            return;
+        }
+
+        // Get logged-in user from session
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        int userId = loggedUser.getUserId();
+
+        // Get roomId from the form
+        String roomIdStr = request.getParameter("roomId");
+        if (roomIdStr == null || roomIdStr.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/views/error.jsp");
+            return;
+        }
+        int roomId = Integer.parseInt(roomIdStr);
+
+        // Create feedback object
+        Feedback fb = new Feedback();
+        fb.setName(request.getParameter("name"));
+        fb.setEmail(request.getParameter("email"));
+        fb.setRating(Integer.parseInt(request.getParameter("rating")));
+        fb.setReview(request.getParameter("review"));
+        fb.setRoomId(roomId);
+        fb.setUserId(userId);
+
+        // Insert feedback
+        feedbackDAO.insertFeedback(fb);
+
+        // Redirect back to room details
+        response.sendRedirect(request.getContextPath() + "/room-details?roomId=" + roomId);
     }
 }
