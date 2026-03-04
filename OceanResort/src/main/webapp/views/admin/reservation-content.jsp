@@ -1,47 +1,83 @@
-<div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6"><h1 class="m-0">Dashboard</h1></div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/dashboard">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
+<%@ page import="java.util.List" %>
+<%@ page import="com.mvc.model.Reservation" %>
 
-    <section class="content">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Welcome</h3></div>
-          <div class="card-body">
-            <h4>Hello, Asiri!</h4>
-            <p>wwwwwwwwwwwwwwwwwwwwwwwwww</p>
+<table id="reservationTable" class="table table-bordered table-striped">
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Guest Name</th>
+  <th>Phone</th>
+  <th>Members</th>
+  <th>Check-In</th>
+  <th>Check-Out</th>
+  <th>Status</th>
+</tr>
+</thead>
 
-            <div class="row mt-4">
-              <div class="col-lg-4">
-                <div class="small-box bg-info">
-                  <div class="inner"><h3>24</h3><p>wwwwwwwwwjjjjwwwww</p></div>
-                  <div class="icon"><i class="fas fa-calendar-check"></i></div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="small-box bg-success">
-                  <div class="inner"><h3>18</h3><p>wwwwwwwwwwwwwww</p></div>
-                  <div class="icon"><i class="fas fa-shopping-cart"></i></div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="small-box bg-warning">
-                  <div class="inner"><h3>7</h3><p>wwwwwwwwwwwwww</p></div>
-                  <div class="icon"><i class="fas fa-star-half-alt"></i></div>
-                </div>
-              </div>
-            </div>
+<tbody>
+<%
+List<Reservation> reservationList =
+    (List<Reservation>) request.getAttribute("reservationList");
 
-          </div>
-        </div>
-      </div>
-    </section>
+if (reservationList != null && !reservationList.isEmpty()) {
+    for (Reservation res : reservationList) {
+%>
+
+<tr>
+  <td><%= res.getReservationId() %></td>
+  <td><%= res.getGuestName() %></td>
+  <td><%= res.getPhoneNumber() %></td>
+  <td><%= res.getMembers() %></td>
+  <td><%= res.getCheckInDate() %></td>
+  <td><%= res.getCheckOutDate() %></td>
+
+  <td>
+    <form method="post" action="<%=request.getContextPath()%>/reservations">
+        <input type="hidden" name="action" value="updateStatus">
+        <input type="hidden" name="reservationId" value="<%= res.getReservationId() %>">
+
+        <select name="status"
+                class="form-control form-control-sm"
+                onchange="this.form.submit()">
+
+            <option value="PENDING"
+                <%= "PENDING".equals(res.getReservationStatus()) ? "selected" : "" %>>
+                Pending
+            </option>
+
+            <option value="CONFIRMED"
+                <%= "CONFIRMED".equals(res.getReservationStatus()) ? "selected" : "" %>>
+                Confirmed
+            </option>
+
+            <option value="CANCELLED"
+                <%= "CANCELLED".equals(res.getReservationStatus()) ? "selected" : "" %>>
+                Cancelled
+            </option>
+
+        </select>
+    </form>
+  </td>
+</tr>
+
+<%
+    }
+} else {
+%>
+<tr>
+  <td colspan="7" class="text-center">No reservations found</td>
+</tr>
+<%
+}
+%>
+</tbody>
+</table>
+
+<script>
+$(document).ready(function () {
+    $('#reservationTable').DataTable({
+        "responsive": true,
+        "autoWidth": false
+    });
+});
+</script>

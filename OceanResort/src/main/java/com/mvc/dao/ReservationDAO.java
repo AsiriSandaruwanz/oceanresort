@@ -112,5 +112,71 @@ public class ReservationDAO {
         return list;
     }
     
+    public List<Reservation> getAllReservations() {
+
+        List<Reservation> list = new ArrayList<>();
+        String sql = "SELECT * FROM reservations ORDER BY created_at DESC";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Reservation reservation = new Reservation();
+
+                reservation.setReservationId(rs.getInt("reservation_id"));
+                reservation.setGuestName(rs.getString("guest_name"));
+                reservation.setPhoneNumber(rs.getString("phone_number"));
+                reservation.setAddress(rs.getString("address"));
+                reservation.setMembers(rs.getInt("members"));
+                reservation.setCheckInDate(rs.getDate("check_in_date").toLocalDate());
+                reservation.setCheckOutDate(rs.getDate("check_out_date").toLocalDate());
+                reservation.setReservationStatus(rs.getString("reservation_status"));
+                reservation.setRoomId(rs.getInt("room_id"));
+                reservation.setPaymentId(rs.getObject("payment_id") != null ? rs.getInt("payment_id") : null);
+                reservation.setUserId(rs.getInt("user_id"));
+                reservation.setCreatedAt(rs.getTimestamp("created_at"));
+                reservation.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+                list.add(reservation);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    
+    public void updateReservationStatus(int reservationId, String status) {
+
+        String sql = "UPDATE reservations SET reservation_status = ?, updated_at = NOW() WHERE reservation_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, reservationId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updatePaymentId(int reservationId, int paymentId) throws SQLException {
+        String sql = "UPDATE reservations SET payment_id = ? , updated_at = NOW() WHERE reservation_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, paymentId);
+            ps.setInt(2, reservationId);
+            ps.executeUpdate();
+        }
+    }
+    
     
 }

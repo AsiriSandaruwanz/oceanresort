@@ -1,47 +1,111 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.mvc.model.Feedback" %>
+
 <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6"><h1 class="m-0">Dashboard</h1></div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/dashboard">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-          </div>
-        </div>
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <h1 class="m-0">Feedback Management</h1>
+
+    <!-- OPTIONAL ADD BUTTON (Remove if not needed) -->
+    <!--
+    <a href="<%=request.getContextPath()%>/feedbacks?action=new"
+        class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Feedback
+    </a>
+    -->
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+
+      <div class="card-body">
+
+        <table id="feedbackTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Rating</th>
+              <th>Review</th>
+              <th>Room ID</th>
+              <th>Date</th>
+              <th width="120">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+          <%
+              List<Feedback> feedbackList =
+                  (List<Feedback>) request.getAttribute("feedbackList");
+
+              if (feedbackList != null && !feedbackList.isEmpty()) {
+                  for (Feedback fb : feedbackList) {
+          %>
+
+            <tr>
+              <td><%= fb.getFeedbackId() %></td>
+              <td><%= fb.getName() %></td>
+              <td><%= fb.getEmail() %></td>
+
+              <!-- RATING COLUMN -->
+              <td>
+                <span class="badge badge-warning">
+                  <%= fb.getRating() %> ★
+                </span>
+              </td>
+
+              <!-- REVIEW COLUMN (SHORTENED) -->
+              <td>
+                <%
+                    String review = fb.getReview();
+                    if (review != null && review.length() > 60) {
+                        out.print(review.substring(0, 60) + "...");
+                    } else {
+                        out.print(review);
+                    }
+                %>
+              </td>
+
+              <td><%= fb.getRoomId() %></td>
+              <td><%= fb.getFeedbackDate() %></td>
+
+              <!-- ACTION BUTTONS -->
+              <td>
+                <!-- DELETE -->
+                <a href="<%=request.getContextPath()%>/feedbacks?action=delete&id=<%=fb.getFeedbackId()%>"
+                   class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure?')">
+                   Delete
+                </a>
+              </td>
+            </tr>
+
+          <%
+                  }
+              } else {
+          %>
+              <tr>
+                <td colspan="8" class="text-center">No feedback found</td>
+              </tr>
+          <%
+              }
+          %>
+          </tbody>
+        </table>
+
       </div>
     </div>
+  </div>
+</section>
 
-    <section class="content">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Welcome</h3></div>
-          <div class="card-body">
-            <h4>Hello, Asiri!</h4>
-            <p>This is a clean and minimal dashboard layout.</p>
-
-            <div class="row mt-4">
-              <div class="col-lg-4">
-                <div class="small-box bg-info">
-                  <div class="inner"><h3>24</h3><p>New Reservations</p></div>
-                  <div class="icon"><i class="fas fa-calendar-check"></i></div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="small-box bg-success">
-                  <div class="inner"><h3>18</h3><p>Today's Orders</p></div>
-                  <div class="icon"><i class="fas fa-shopping-cart"></i></div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="small-box bg-warning">
-                  <div class="inner"><h3>7</h3><p>Pending Reviews</p></div>
-                  <div class="icon"><i class="fas fa-star-half-alt"></i></div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- DATATABLE SCRIPT -->
+<script>
+  $(document).ready(function () {
+      $('#feedbackTable').DataTable({
+          "responsive": true,
+          "autoWidth": false
+      });
+  });
+</script>

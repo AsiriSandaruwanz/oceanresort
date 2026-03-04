@@ -162,4 +162,74 @@ public class RoomDAO {
             e.printStackTrace();
         }
     }
+    
+    public List<Room> getLatestRooms(int limit) {
+        List<Room> rooms = new ArrayList<>();
+
+        String sql = "SELECT * FROM rooms ORDER BY created_at DESC LIMIT ?";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, limit);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Room room = new Room();
+                room.setRoomId(rs.getInt("room_id"));
+                room.setRoomNumber(rs.getString("room_number"));
+                room.setBedType(rs.getString("bed_type"));
+                room.setPricePerNight(rs.getDouble("price_per_night"));
+                room.setTitle(rs.getString("title"));
+                room.setAmenities(rs.getString("amenities"));
+                room.setSize(rs.getString("size"));
+                room.setCapacity(rs.getInt("capacity"));
+                room.setImagePath(rs.getString("image_path"));
+                room.setCreatedAt(rs.getTimestamp("created_at"));
+                room.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rooms;
+    }
+    
+    
+    public List<Room> getRoomsByCapacity(int guests) {
+        List<Room> rooms = new ArrayList<>();
+        String sql = "SELECT * FROM rooms WHERE capacity >= ?";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, guests);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Room room = new Room();
+                room.setRoomId(rs.getInt("room_id"));
+                room.setTitle(rs.getString("title"));
+                room.setRoomNumber(rs.getString("room_number"));
+                room.setBedType(rs.getString("bed_type"));
+                room.setPricePerNight(rs.getDouble("price_per_night"));
+                room.setCapacity(rs.getInt("capacity"));
+                room.setSize(rs.getString("size"));
+                room.setAmenities(rs.getString("amenities"));
+                room.setImagePath(rs.getString("image_path"));
+                room.setCreatedAt(rs.getTimestamp("created_at"));
+                room.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rooms;
+    }
 }

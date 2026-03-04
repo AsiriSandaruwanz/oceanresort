@@ -1,47 +1,107 @@
-<div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6"><h1 class="m-0">Dashboard</h1></div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/dashboard">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
+<%@ page import="java.util.List" %>
+<%@ page import="com.mvc.model.Payment" %>
 
-    <section class="content">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Welcome</h3></div>
-          <div class="card-body">
-            <h4>Hello, Asiri!</h4>
-            <p>wwwwwwwwwwwwwwwwwwwwwwwwww</p>
+<%
+    List<Payment> payments = (List<Payment>) request.getAttribute("payments");
+    String ctx = request.getContextPath();
+%>
 
-            <div class="row mt-4">
-              <div class="col-lg-4">
-                <div class="small-box bg-info">
-                  <div class="inner"><h3>24</h3><p>wwwwwwwwwwwwww</p></div>
-                  <div class="icon"><i class="fas fa-calendar-check"></i></div>
+<div class="container-fluid">
+
+    <h3 class="mb-4">All Payments</h3>
+
+    <div class="card shadow p-3">
+
+        <table id="paymentTable" class="display table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Method</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Slip</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if (payments != null) {
+                    for (Payment p : payments) { %>
+
+                <tr>
+                    <td><%= p.getPaymentId() %></td>
+                    <td><%= p.getPaymentMethod() %></td>
+                    <td>₹ <%= p.getAmount() %></td>
+                    <td><%= p.getPaymentDate() %></td>
+                    <td>
+                        <% if ("Paid".equalsIgnoreCase(p.getPaymentStatus())) { %>
+                            <span class="badge bg-success">Paid</span>
+                        <% } else { %>
+                            <span class="badge bg-warning text-dark">
+                                <%= p.getPaymentStatus() %>
+                            </span>
+                        <% } %>
+                    </td>
+
+                    <td>
+    <% if (p.getSlipImage() != null) { %>
+
+        <!-- Thumbnail -->
+        <a href="#" data-bs-toggle="modal"
+           data-bs-target="#imgModal<%=p.getPaymentId()%>">
+
+            <img src="<%= ctx %>/uploads/<%= p.getSlipImage() %>"
+                 width="60"
+                 height="60"
+                 style="object-fit:cover; border-radius:5px;">
+        </a>
+
+        <!-- Modal for Large Image -->
+        <div class="modal fade"
+             id="imgModal<%=p.getPaymentId()%>"
+             tabindex="-1"
+             aria-labelledby="imgModalLabel<%=p.getPaymentId()%>"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imgModalLabel<%=p.getPaymentId()%>">
+                            Payment Slip - <%= p.getPaymentId() %>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="<%= ctx %>/uploads/<%= p.getSlipImage() %>"
+                             class="img-fluid rounded">
+                    </div>
                 </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="small-box bg-success">
-                  <div class="inner"><h3>18</h3><p>wwwwwwwwwwwwwww</p></div>
-                  <div class="icon"><i class="fas fa-shopping-cart"></i></div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="small-box bg-warning">
-                  <div class="inner"><h3>7</h3><p>wwwwwwwwwwwwww</p></div>
-                  <div class="icon"><i class="fas fa-star-half-alt"></i></div>
-                </div>
-              </div>
             </div>
 
-          </div>
         </div>
-      </div>
-    </section>
+
+    <% } else { %>
+        No Image
+    <% } %>
+</td>
+                </tr>
+
+                <% } } %>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+<!-- Initialize DataTable -->
+<script>
+    $(document).ready(function () {
+        $('#paymentTable').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 25, 50],
+            "ordering": true
+        });
+    });
+</script>

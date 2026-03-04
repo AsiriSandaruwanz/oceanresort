@@ -103,4 +103,52 @@ public class FeedbackDAO {
 
         return feedbacks;
     }
+    
+    
+ // ✅ Get all feedback
+    public List<Feedback> getAllFeedback() {
+        List<Feedback> feedbacks = new ArrayList<>();
+        String sql = "SELECT * FROM feedbacks ORDER BY created_at DESC";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Feedback fb = new Feedback();
+                fb.setFeedbackId(rs.getInt("feedback_id"));
+                fb.setName(rs.getString("name"));
+                fb.setEmail(rs.getString("email"));
+                fb.setFeedbackDate(rs.getDate("feedback_date"));
+                fb.setRating(rs.getInt("rating"));
+                fb.setReview(rs.getString("review"));
+                fb.setRoomId(rs.getInt("room_id"));
+                fb.setUserId(rs.getInt("user_id"));
+                fb.setCreatedAt(rs.getTimestamp("created_at"));
+                fb.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+                feedbacks.add(fb);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return feedbacks;
+    }
+    
+    public void deleteFeedback(int id) {
+
+        String sql = "DELETE FROM feedbacks WHERE feedback_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

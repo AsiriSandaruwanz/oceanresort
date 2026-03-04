@@ -1,10 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
-    import="java.util.List, com.mvc.model.Blog" %>
+    import="java.util.List, com.mvc.model.Blog, com.mvc.model.Room, com.mvc.model.Feedback" %>
 
 <%
     String path = request.getContextPath();
+    List<Feedback> feedbacks = (List<Feedback>) request.getAttribute("allFeedback");
 %>
+
+<style>
+/* Room card container */
+.hp-room-item {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    height: 450px; /* adjust if needed */
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    overflow: hidden;
+}
+
+/* Black overlay */
+.room-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* adjust darkness here */
+    z-index: 1;
+}
+
+/* Text above overlay */
+.hr-text {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+}
+
+/* Make table text white */
+.hr-text table td {
+    color: #ffffff;
+}
+</style>
 
 <jsp:include page="/components/customer/header.jsp" />
 
@@ -21,37 +59,33 @@
                 </div>
             </div>
             <div class="col-xl-4 col-lg-5 offset-xl-2 offset-lg-1">
-                <div class="booking-form">
-                    <h3>Booking Your Hotel</h3>
-                    <form action="#">
-                        <div class="check-date">
-                            <label for="date-in">Check In:</label>
-                            <input type="text" class="date-input" id="date-in">
-                            <i class="icon_calendar"></i>
-                        </div>
-                        <div class="check-date">
-                            <label for="date-out">Check Out:</label>
-                            <input type="text" class="date-input" id="date-out">
-                            <i class="icon_calendar"></i>
-                        </div>
-                        <div class="select-option">
-                            <label for="guest">Guests:</label>
-                            <select id="guest">
-                                <option value="">2 Adults</option>
-                                <option value="">3 Adults</option>
-                            </select>
-                        </div>
-                        <div class="select-option">
-                            <label for="room">Room:</label>
-                            <select id="room">
-                                <option value="">1 Room</option>
-                                <option value="">2 Room</option>
-                            </select>
-                        </div>
-                        <button type="submit">Check Availability</button>
-                    </form>
-                </div>
+    <div class="booking-form">
+        <h3>Booking Your Hotel</h3>
+        <form action="<%=path%>/availableRooms" method="get">
+            <div class="check-date">
+                <label for="date-in">Check In:</label>
+                <input type="date" class="date-input" id="date-in" name="checkIn" required>
+                <i class="icon_calendar"></i>
             </div>
+            <div class="check-date">
+                <label for="date-out">Check Out:</label>
+                <input type="date" class="date-input" id="date-out" name="checkOut" required>
+                <i class="icon_calendar"></i>
+            </div>
+            <div class="select-option">
+                <label for="guest">Guests:</label>
+                <select id="guest" name="guests" required>
+                    <option value="2">2 Adults</option>
+                    <option value="3">3 Adults</option>
+                    <option value="4">4 Adults</option>
+                    <option value="5">5 Adults</option>
+                    <option value="6">6 Adults</option>
+                </select>
+            </div>
+            <button type="submit">Check Availability</button>
+        </form>
+    </div>
+</div>
         </div>
     </div>
     <div class="hero-slider owl-carousel">
@@ -115,133 +149,69 @@
 </section>
 <!-- Services Section End -->
 
-<!-- Home Room Section Begin -->
 <section class="hp-room-section">
     <div class="container-fluid">
         <div class="hp-room-items">
             <div class="row">
+
+<%
+    List<Room> rooms = (List<Room>) request.getAttribute("latestRooms");
+
+    if (rooms != null && !rooms.isEmpty()) {
+        for (Room room : rooms) {
+%>
+
                 <div class="col-lg-3 col-md-6">
-                    <div class="hp-room-item set-bg" data-setbg="<%=path%>/assets/customer/img/room/room-b1.jpg">
+                    <div class="hp-room-item set-bg"
+                         data-setbg="<%=path%>/<%=room.getImagePath()%>">
+
+                        <!-- BLACK OVERLAY -->
+                        <div class="room-overlay"></div>
+
                         <div class="hr-text">
-                            <h3>Double Room</h3>
-                            <h2>199$<span>/Pernight</span></h2>
+                            <h3><%=room.getTitle()%></h3>
+                            <h2><%=room.getPricePerNight()%>$<span>/Pernight</span></h2>
                             <table>
                                 <tbody>
                                     <tr>
                                         <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
+                                        <td><%=room.getSize()%></td>
                                     </tr>
                                     <tr>
                                         <td class="r-o">Capacity:</td>
-                                        <td>Max persion 5</td>
+                                        <td>Max person <%=room.getCapacity()%></td>
                                     </tr>
                                     <tr>
                                         <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
+                                        <td><%=room.getBedType()%></td>
                                     </tr>
                                     <tr>
                                         <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
+                                        <td><%=room.getAmenities()%></td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <a href="#" class="primary-btn">More Details</a>
+                            <a href="<%=path%>/room-details?id=<%=room.getRoomId()%>"
+                               class="primary-btn">More Details</a>
                         </div>
                     </div>
                 </div>
-                <!-- Repeat for other rooms -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="hp-room-item set-bg" data-setbg="<%=path%>/assets/customer/img/room/room-b2.jpg">
-                         <div class="hr-text">
-                            <h3>Double Room</h3>
-                            <h2>199$<span>/Pernight</span></h2>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 5</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">More Details</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="hp-room-item set-bg" data-setbg="<%=path%>/assets/customer/img/room/room-b3.jpg">
-                        <div class="hr-text">
-                            <h3>Double Room</h3>
-                            <h2>199$<span>/Pernight</span></h2>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 5</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">More Details</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="hp-room-item set-bg" data-setbg="<%=path%>/assets/customer/img/room/room-b4.jpg">
-                         <div class="hr-text">
-                            <h3>Double Room</h3>
-                            <h2>199$<span>/Pernight</span></h2>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 5</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">More Details</a>
-                        </div>
-                    </div>
-                </div>
+
+<%
+        }
+    } else {
+%>
+        <div class="col-lg-12">
+            <p>No rooms available.</p>
+        </div>
+<%
+    }
+%>
+
             </div>
         </div>
     </div>
 </section>
-<!-- Home Room Section End -->
 
 <!-- Testimonial Section Begin -->
 <section class="testimonial-section spad">
@@ -257,24 +227,47 @@
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
                 <div class="testimonial-slider owl-carousel">
+
+<% if (feedbacks != null && !feedbacks.isEmpty()) { 
+       for (Feedback fb : feedbacks) { %>
                     <div class="ts-item">
-                        <p>After a construction project took longer than expected...</p>
+                        <p><%= fb.getReview() %></p>
+                        <div class="ti-author">
+                            <div class="rating">
+                                <%-- Display star icons dynamically based on rating --%>
+                                <%
+                                    int rating = fb.getRating();
+                                    for (int i = 1; i <= 5; i++) {
+                                        if (i <= rating) { %>
+                                            <i class="icon_star"></i>
+                                        <% } else { %>
+                                            <i class="icon_star_alt"></i>
+                                        <% } 
+                                    }
+                                %>
+                            </div>
+                            <h5> - <%= fb.getName() %></h5>
+                        </div>
+                        <img src="<%=path%>/assets/customer/img/testimonial-logo.png" alt="">
+                    </div>
+<%     } 
+   } else { %>
+                    <div class="ts-item">
+                        <p>No testimonials available yet.</p>
                         <div class="ti-author">
                             <div class="rating">
                                 <i class="icon_star"></i>
                                 <i class="icon_star"></i>
                                 <i class="icon_star"></i>
                                 <i class="icon_star"></i>
-                                <i class="icon_star-half_alt"></i>
+                                <i class="icon_star"></i>
                             </div>
-                            <h5> - Alexander Vasquez</h5>
+                            <h5> - Admin</h5>
                         </div>
                         <img src="<%=path%>/assets/customer/img/testimonial-logo.png" alt="">
                     </div>
-                    <div class="ts-item">
-                        <!-- Same content -->
-                        <img src="<%=path%>/assets/customer/img/testimonial-logo.png" alt="">
-                    </div>
+<% } %>
+
                 </div>
             </div>
         </div>

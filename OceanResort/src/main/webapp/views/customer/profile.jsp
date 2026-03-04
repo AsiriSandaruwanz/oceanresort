@@ -29,6 +29,31 @@
         transition: all 0.3s ease;
     }
     .btn-pay-now:hover { background-color: #ff6600; color: #fff; }
+    
+    .btn-pay-now {
+        background-color: #ff6600;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 5px;
+        min-width: 120px;
+        height: 35px;
+        line-height: 28px;
+        font-size: 14px;
+        padding: 0 15px;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-pay-now:hover {
+        background-color: #e65c00;
+        color: #fff;
+    }
+    .modal-header.bg-warning {
+        background-color: #ff6600 !important;
+    }
+    .modal-header.bg-warning .modal-title {
+        color: #fff;
+    }
 </style>
 
 <div class="container profile-container">
@@ -138,15 +163,97 @@
                                         <% } %>
                                     </td>
                                     <td>
-                                       <% if (!"Paid".equalsIgnoreCase(res.getReservationStatus())) { %>
-                                           <form method="post" action="<%= ctx %>/payment">
-                                               <input type="hidden" name="reservationId" value="<%= res.getReservationId() %>">
-                                               <button type="submit" class="btn-pay-now">Pay Now</button>
-                                           </form>
-                                       <% } else { %>
-                                           <span class="text-success">Paid</span>
-                                       <% } %>
-                                   </td>
+<% if (res.getPaymentId() == null) { %>
+    <!-- Pay Now Button -->
+    <button type="button" class="btn btn-pay-now" data-bs-toggle="modal" data-bs-target="#payModal<%=res.getReservationId()%>">
+        Pay Now
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="payModal<%=res.getReservationId()%>" tabindex="-1" aria-labelledby="payModalLabel<%=res.getReservationId()%>" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <!-- Form -->
+                <form method="post" action="<%= ctx %>/payment" enctype="multipart/form-data">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title" id="payModalLabel<%=res.getReservationId()%>">
+                            Pay for Reservation #<%= res.getReservationId() %>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+
+                        <!-- Bank Details Section -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Bank Details</h6>
+                            <div class="border p-3 rounded bg-light">
+                                <p class="mb-1"><strong>Bank:</strong> Ocean Bank</p>
+                                <p class="mb-1"><strong>Account Name:</strong> Ocean Resort</p>
+                                <p class="mb-1"><strong>Account Number:</strong> 123456789</p>
+                                <p class="mb-0"><strong>IFSC:</strong> OCEAN0001</p>
+                            </div>
+                        </div>
+
+                        <!-- Payment Form Fields -->
+                        <div class="row g-3">
+
+                            <!-- Payment Method -->
+                            <div class="col-md-6">
+                                <label for="paymentMethod<%=res.getReservationId()%>" class="form-label">Payment Method</label>
+                                <select class="form-control" id="paymentMethod<%=res.getReservationId()%>" name="payment_method" required>
+                                    <option value="">Select Method</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="UPI">UPI</option>
+                                </select>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="col-md-6">
+                                <label for="amount<%=res.getReservationId()%>" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="amount<%=res.getReservationId()%>" name="amount" value="<%=res.getMembers() * 100%>" required>
+                            </div>
+
+                            <!-- Payment Date -->
+                            <div class="col-md-6">
+                                <label for="paymentDate<%=res.getReservationId()%>" class="form-label">Payment Date</label>
+                                <input type="date" class="form-control" id="paymentDate<%=res.getReservationId()%>" name="payment_date" value="<%= java.time.LocalDate.now() %>" required>
+                            </div>
+
+                            <!-- Upload Slip -->
+                            <div class="col-md-6">
+                                <label for="paymentSlip<%=res.getReservationId()%>" class="form-label">Upload Payment Slip</label>
+                                <input type="file" class="form-control" id="paymentSlip<%=res.getReservationId()%>" name="slip_image" required>
+                            </div>
+
+                        </div>
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" name="reservationId" value="<%= res.getReservationId() %>">
+                        <input type="hidden" name="payment_status" value="Paid">
+
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-pay-now">Pay Now</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+<% } else { %>
+    <span class="text-success fw-bold">Paid</span>
+<% } %>
+</td>
                                 </tr>
                                 <%
                                         }
